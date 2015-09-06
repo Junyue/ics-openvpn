@@ -48,9 +48,15 @@ public class ConfigParser {
                 if (line == null)
                     break;
 
-                if (lineno == 1 && (line.startsWith("PK\003\004")
-                        || (line.startsWith("PK\007\008"))))
-                    throw new ConfigParseError("Input looks like a ZIP Archive. Import is only possible for OpenVPN config files (.ovpn/.conf)");
+                if (lineno == 1) {
+                    if ((line.startsWith("PK\003\004")
+                            || (line.startsWith("PK\007\008")))) {
+                        throw new ConfigParseError("Input looks like a ZIP Archive. Import is only possible for OpenVPN config files (.ovpn/.conf)");
+                    }
+                    if (line.startsWith("\uFEFF")) {
+                        line = line.substring(1);
+                    }
+                }
 
                 // Check for OpenVPN Access Server Meta information
                 if (line.startsWith("# OVPN_ACCESS_SERVER_")) {
@@ -838,13 +844,21 @@ public class ConfigParser {
         return false;
     }
 
+    //! Generate options for custom options
     private String getOptionStrings(Vector<Vector<String>> option) {
         String custom = "";
         for (Vector<String> optionsline : option) {
             if (!ignoreThisOption(optionsline)) {
-                for (String arg : optionsline)
-                    custom += VpnProfile.openVpnEscape(arg) + " ";
-                custom += "\n";
+                // Check if option had been inlined and inline again
+                if (optionsline.size() == 2 && "extra-certs".equals(optionsline.get(0)) ) {
+                    custom += VpnProfile.insertFileData(optionsline.get(0), optionsline.get(1));
+
+
+                } else {
+                    for (String arg : optionsline)
+                        custom += VpnProfile.openVpnEscape(arg) + " ";
+                    custom += "\n";
+                }
             }
         }
         return custom;

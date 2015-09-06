@@ -46,13 +46,22 @@ endif
 
 LOCAL_PATH := $(JNI_DIR)
 
-# The only real JNI library
+# The only real JNI libraries
 include $(CLEAR_VARS)
 LOCAL_LDLIBS := -llog  -lz
 LOCAL_CFLAGS = --std=c99
-LOCAL_C_INCLUDES := openssl/include openssl/crypto openssl 
-LOCAL_SRC_FILES:= jniglue.c jbcrypto.cpp scan_ifs.c
+LOCAL_SRC_FILES:= jniglue.c  scan_ifs.c
 LOCAL_MODULE = opvpnutil
+include $(BUILD_SHARED_LIBRARY)
+
+
+# The only real JNI libraries
+include $(CLEAR_VARS)
+LOCAL_LDLIBS := -llog  -lz
+LOCAL_CFLAGS = --std=c99
+LOCAL_C_INCLUDES := openssl/include openssl/crypto openssl
+LOCAL_SRC_FILES:=  jbcrypto.cpp
+LOCAL_MODULE = jbcrypto
 LOCAL_SHARED_LIBRARIES :=  libcrypto
 include $(BUILD_SHARED_LIBRARY)
 
@@ -61,7 +70,7 @@ include $(CLEAR_VARS)
 LOCAL_LDLIBS := -lz  -lc 
 LOCAL_SHARED_LIBRARIES := libssl libcrypto openvpn
 LOCAL_SRC_FILES:= minivpn.c dummy.cpp
-LOCAL_MODULE = nopievpn
+LOCAL_MODULE = nopie_openvpn
 include $(BUILD_EXECUTABLE)
 
 
@@ -72,6 +81,6 @@ LOCAL_CFLAGS = -fPIE
 LOCAL_LDFLAGS = -fPIE -pie
 LOCAL_SHARED_LIBRARIES := libssl libcrypto openvpn
 LOCAL_SRC_FILES:= minivpn.c dummy.cpp
-LOCAL_MODULE = pievpn
+LOCAL_MODULE = pie_openvpn
 include $(BUILD_EXECUTABLE)
 

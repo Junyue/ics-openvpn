@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -64,7 +65,6 @@ public class Settings_Connections extends Settings_Fragment implements View.OnCl
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         mRecyclerView.setAdapter(mConnectionsAdapter);
-
 
         ImageButton fab_button = (ImageButton) v.findViewById(R.id.add_new_remote);
         if(fab_button!=null)
